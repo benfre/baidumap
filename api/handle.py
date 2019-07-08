@@ -3,7 +3,7 @@ from urllib.parse import urljoin
 
 from baidumap.core.controller import Controller
 from baidumap.core.static import base_url
-from baidumap.object import BaiduMapObject
+from baidumap.object import BaiduMapObject, BaiduMapStatic
 from baidumap.util import log
 from baidumap.util.url import Url
 
@@ -13,7 +13,7 @@ class Handle(object):
     handle of baidu map api
     '''
 
-    def __init__(self, ak_key, url='', is_list=False, **kwargs):
+    def __init__(self, ak_key, url='', is_list=False, is_image =False, **kwargs):
         '''
         use format as "key=value", can set any number of param in one time
         '''
@@ -21,6 +21,7 @@ class Handle(object):
         self._url = Url(url)
         self._url.add_map(kwargs)
         self.is_list = is_list
+        self.is_image = is_image
         log.debug('handle created, name: %s' % self.get_name())
         return
 
@@ -48,12 +49,17 @@ class Handle(object):
             # default collect all
             result = self._controller.get_list(self._url, collect_keys,
                                                **kwargs)
+            return BaiduMapObject(result)
+        elif self.is_image:
+            image =self._controller.get_image(self._url, **kwargs)
+            return image
         else:
             # default collect all
             result = self._controller.get_single(self._url, collect_keys,
                                                  **kwargs)
+            return BaiduMapObject(result)
 
-        return BaiduMapObject(result)
+        
 
     pass
 

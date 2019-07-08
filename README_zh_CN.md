@@ -75,7 +75,7 @@ pip install baidumap
 # 先导入百度地图开发包
 from baidumap import config
 from baidumap.api.handle import get_handle
-from baidumap.object import BaiduMapObject
+from baidumap.object import BaiduMapObject, BaiduMapStatic
 
 import logging
 
@@ -112,6 +112,15 @@ if __name__ == '__main__':
 	# get_property可以递归获取参数，无需考虑字典的嵌套
     print('from address find location: %s' %
           thu_main.get_property('location')['location'])
+
+        
+    location = thu_main.get_property('location')['location']
+    static_map = BaiduMapStatic(center='{},{}'.format(location['lng'],  location['lat']),zoom=17)
+    image = static_map.get_image(raw_handler)
+    image.show()
+    print('static image map size (%d, %d)' % image.size)
+
+
 	# get_properties可以同时获取多个参数并组合在一起
     print('from address find location: %s' % thu_main.get_properties(
         ['lat', 'lng'], p_defaults={'lat': '-1',

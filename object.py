@@ -183,3 +183,22 @@ class BaiduMapObject(JsonLike):
         return
 
     pass
+
+class BaiduMapStatic(JsonLike):
+    def __repr__(self):
+        return 'BaiduMapStatic' + repr(self.__dict__)
+
+    def get_image(self, handle=None):
+        ''' get static image of map from properties'''
+        handle.set_name('staticimage/v2')
+        handle.is_image =True
+        center = self.get_property('center')['center'] # should we also use location property?
+        if center is not None:
+            handle.set_params(center=center)
+
+        zoom = self.get_property('zoom')['zoom']
+        if zoom is not None:
+            handle.set_params(zoom=zoom)
+        image = handle.run()
+        handle.is_image =False
+        return image

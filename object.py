@@ -159,7 +159,7 @@ class BaiduMapObject(JsonLike):
 
     def from_address(self, handle=None):
         # use handle to get location
-        handle.set_name('geocoder/v2/')
+        handle.set_name('geocoding/v3/')
         address = self.get_property('address', '')['address']
         if not isinstance(address, str):
             raise TypeError(
@@ -171,13 +171,14 @@ class BaiduMapObject(JsonLike):
 
     def from_location(self, handle=None):
         # use handle to get address
-        handle.set_name('geocoder/v2/')
+        handle.set_name('reverse_geocoding/v3/')
         location = self.get_property('location', '')['location']
         if not isinstance(location, Location):
             raise TypeError(
                 'location: %s found, takes Location' % location.__class__)
 
         handle.set_params(location=location)
+        handle.set_params(extensions_poi=1)
         self.from_json(handle.run().to_json())
         return
 
